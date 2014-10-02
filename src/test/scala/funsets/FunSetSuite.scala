@@ -77,6 +77,7 @@ class FunSetSuite extends FunSuite {
     val s1 = singletonSet(1)
     val s2 = singletonSet(2)
     val s3 = singletonSet(3)
+    val s4 = singletonSet(4)
     val t1 = singletonSet(1)
     val t2 = singletonSet(2)
     val t3 = singletonSet(3)
@@ -158,6 +159,44 @@ class FunSetSuite extends FunSuite {
       assert(!contains(filter(t, s), -1), "Filter 3")
       assert(!contains(filter(t, s), 0), "Filter 4")
       assert(!contains(filter(t, s), 5), "Filter 5")
+    }
+  }
+
+  test("forall works correctly") {
+    new TestSets {
+      val s = union(union(s1, s2), s3)
+      val t = union(s1, s2)
+      val x = union(s, s4)
+
+      assert(forall(s, s), "Forall 1")
+      assert(!forall(s, t), "Forall 2")
+      assert(forall(s, x), "Forall 3")
+    }
+  }
+
+  test("exists works correctly") {
+    new TestSets {
+      val a = union(union(s1, s2), s3)
+      val b = union(singletonSet(-1), singletonSet(-2))
+      val c = union(s1, s2)
+
+      assert(exists(a, a), "Exists 1")
+      assert(!exists(a, b), "Exists 2")
+      assert(exists(a, s1), "Exists 3")
+      assert(exists(a, c), "Exists 4")
+      assert(exists(s1, a), "Exists 5")
+    }
+  }
+
+  test("map works correctly") {
+    new TestSets {
+      val a = union(s1, s2)
+
+      assert(contains(map(a, x => 0), 0), "Map 1")
+      assert(!contains(map(a, x => 0),1), "Map 2")
+      assert(contains(map(a, x => x + 1), 2), "Map 3")
+      assert(contains(map(a, x => x + 1), 3), "Map 4")
+      assert(!contains(map(a, x => x + 1), 1), "Map 5")
     }
   }
 }
